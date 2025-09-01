@@ -74,6 +74,9 @@ const Index = () => {
 
       const result = await response.json();
       setPredictedPrice(result.price);
+      
+      // Scroll to top to show the predicted price
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error("Failed to get price prediction:", error);
     } finally {
