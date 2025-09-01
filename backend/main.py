@@ -6,6 +6,7 @@ app = FastAPI(title="Price Predictor API", version="1.0.0")
 # Allow cross-origin requests (use restrictive origins in production)
 ALLOWED_ORIGINS = [
     "https://docker-price-predict.lovable.app",  # production
+    "https://lovable.dev",                       # Lovable domain
     "http://localhost:5173",                     # local Vite dev
     "http://127.0.0.1:5173",                     # sometimes needed
 ]
