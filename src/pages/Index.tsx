@@ -8,8 +8,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Building2, Home, MapPin, DollarSign } from "lucide-react";
 
 const propertySchema = z.object({
   borough: z.string().min(1, "Borough is required"),
@@ -89,30 +90,51 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-2xl mx-auto">
-        <Card>
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-gradient-primary p-3 rounded-xl shadow-card">
+              <Building2 className="h-8 w-8 text-primary-foreground" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">NYC Rental Price Predictor</h1>
+          <p className="text-muted-foreground text-lg">Enter your property details to get an accurate price estimate</p>
+        </div>
+
+        {/* Predicted Price Display */}
+        {predictedPrice && (
+          <Card className="mb-8 shadow-form border-2 border-primary/20">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <div className="flex justify-center mb-2">
+                  <DollarSign className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-3xl font-bold text-primary mb-1">
+                  ${predictedPrice.toLocaleString()}
+                </h3>
+                <p className="text-muted-foreground">Estimated Monthly Rent</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="shadow-form">
           <CardHeader>
-            <CardTitle>Property Price Predictor</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Home className="h-5 w-5 text-primary" />
+              Property Details
+            </CardTitle>
             <CardDescription>
-              Enter property details to get an estimated price prediction
+              Fill out the details below to get an accurate rental price prediction
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {predictedPrice && (
-              <Card className="bg-primary/5 border-primary/20 mb-6">
-                <CardContent className="pt-6">
-                  <div className="text-center">
-                    <h3 className="text-2xl font-bold text-primary">
-                      Predicted Price: ${predictedPrice.toLocaleString()}
-                    </h3>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                {/* Basic Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {/* Borough */}
                   <FormField
                     control={form.control}
@@ -203,12 +225,16 @@ const Index = () => {
                     name="subwayDistance"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Subway Station (min)</FormLabel>
+                        <FormLabel className="flex items-center gap-1">
+                          <MapPin className="h-4 w-4" />
+                          Subway Station (min)
+                        </FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             {...field}
                             onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="e.g., 10"
                           />
                         </FormControl>
                         <FormMessage />
@@ -255,160 +281,59 @@ const Index = () => {
                   />
                 </div>
 
-                {/* Amenities Checkboxes */}
+                {/* Amenities */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Amenities</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="noFee"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            No Fee
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasRoofdeck"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            Has Roofdeck
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasWasherDryer"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            In-Unit Washer/Dryer
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasDoorman"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            Has Doorman
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasElevator"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            Has Elevator
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasDishwasher"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            Has Dishwasher
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasPatio"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            Has Patio
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="hasGym"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            Has Gym
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
+                  <h3 className="text-lg font-semibold text-foreground">Amenities & Features</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { key: 'noFee', label: 'No Fee' },
+                      { key: 'hasRoofdeck', label: 'Roof Deck' },
+                      { key: 'hasWasherDryer', label: 'In-Unit Washer/Dryer' },
+                      { key: 'hasDoorman', label: 'Doorman' },
+                      { key: 'hasElevator', label: 'Elevator' },
+                      { key: 'hasDishwasher', label: 'Dishwasher' },
+                      { key: 'hasPatio', label: 'Patio' },
+                      { key: 'hasGym', label: 'Gym' },
+                    ].map(({ key, label }) => (
+                      <FormField
+                        key={key}
+                        control={form.control}
+                        name={key as keyof PropertyForm}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value as boolean}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                            <Label htmlFor={key} className="text-sm cursor-pointer">
+                              {label}
+                            </Label>
+                          </FormItem>
+                        )}
+                      />
+                    ))}
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Get Price Prediction
-                </Button>
+                {/* Submit Button */}
+                <div className="pt-6">
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading}
+                    className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground font-semibold py-3 px-6 rounded-lg shadow-card transition-all duration-200 hover:shadow-form"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Analyzing Property...
+                      </>
+                    ) : (
+                      'Get Price Prediction'
+                    )}
+                  </Button>
+                </div>
               </form>
             </Form>
           </CardContent>

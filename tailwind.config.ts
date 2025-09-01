@@ -68,6 +68,13 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)'
+			},
+			boxShadow: {
+				'card': 'var(--shadow-card)',
+				'form': 'var(--shadow-form)'
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
