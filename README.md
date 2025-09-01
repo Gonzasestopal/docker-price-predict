@@ -1,8 +1,10 @@
-# Welcome to your Lovable project
+# Rental Price estimator
+
+![Project Image](public/img.png)
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/20c400c5-4e4b-4466-8eeb-fed728bc1053
+**URL**: https://docker-price-predict.lovable.app/
 
 ## How can I edit this code?
 
