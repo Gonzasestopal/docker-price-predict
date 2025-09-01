@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
+
 import { Loader2 } from "lucide-react";
 
 const propertySchema = z.object({
@@ -34,7 +34,7 @@ type PropertyForm = z.infer<typeof propertySchema>;
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
-  const { toast } = useToast();
+  
 
   const form = useForm<PropertyForm>({
     resolver: zodResolver(propertySchema),
@@ -73,17 +73,8 @@ const Index = () => {
 
       const result = await response.json();
       setPredictedPrice(result.price);
-      
-      toast({
-        title: "Price Prediction Complete",
-        description: `Estimated price: $${result.price.toLocaleString()}`,
-      });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to get price prediction. Please verify the backend URL is reachable.",
-        variant: "destructive",
-      });
+      console.error("Failed to get price prediction:", error);
     } finally {
       setIsLoading(false);
     }
@@ -108,6 +99,17 @@ const Index = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {predictedPrice && (
+              <Card className="bg-primary/5 border-primary/20 mb-6">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-primary">
+                      Predicted Price: ${predictedPrice.toLocaleString()}
+                    </h3>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -407,18 +409,6 @@ const Index = () => {
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Get Price Prediction
                 </Button>
-
-                {predictedPrice && (
-                  <Card className="bg-primary/5 border-primary/20">
-                    <CardContent className="pt-6">
-                      <div className="text-center">
-                        <h3 className="text-2xl font-bold text-primary">
-                          Predicted Price: ${predictedPrice.toLocaleString()}
-                        </h3>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
               </form>
             </Form>
           </CardContent>
