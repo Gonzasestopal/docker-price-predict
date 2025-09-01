@@ -1,7 +1,25 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Price Predictor API", version="1.0.0")
+from backend.predict import price_model
+from backend.requests import PriceRequest
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # ---- startup ----
+    price_model.load_and_train()
+    print("✅ Model trained once at startup")
+
+    yield  # app runs here
+
+    # ---- shutdown ----
+    # close DB, redis, etc. if you add them later
+    print("🛑 App shutting down...")
+
+app = FastAPI(title="Price Predictor API", version="1.0.0", lifespan=lifespan)
 
 # Allow cross-origin requests (use restrictive origins in production)
 ALLOWED_ORIGINS = [
@@ -21,18 +39,29 @@ app.add_middleware(
 )
 
 
-@app.get("/predict")
-def predict():
+@app.post("/predict")
+def predict(price: PriceRequest):
     """
     Returns a sample price prediction in the requested format.
     """
-    return {"price": 4002.23}
+    value = price_model.predict(price)
+    return {"price": f"{value:.2f}"}
+
+
+@app.get("/metrics")
+def metrics_all():
+    """
+    Convenience endpoint to see R², MAE, RMSE, and split sizes.
+    """
+    if not price_model.metrics:
+        return {"error": "Model not trained"}
+    return price_model.metrics
 
 
 @app.get("/")
 def root():
     return {
         "name": "Price Predictor API",
-        "endpoints": ["/predict"],
+        "endpoints": ["/predict", '/metrics'],
         "message": "Use GET /predict to retrieve a price in the format {'price': 4002.23}",
     }
