@@ -295,7 +295,7 @@ const Index = () => {
                       { key: 'hasDoorman', label: 'Doorman' },
                       { key: 'hasElevator', label: 'Elevator' },
                       { key: 'hasDishwasher', label: 'Dishwasher' },
-                      { key: 'hasPatio', label: 'Patio' },
+                      { key: 'hasPatio', label: 'Patio' },  
                       { key: 'hasGym', label: 'Gym' },
                     ].map(({ key, label }) => (
                       <FormField
@@ -305,9 +305,12 @@ const Index = () => {
                         render={({ field }) => (
                           <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                             <FormControl>
-                              <Checkbox
+                              <input
+                                type="checkbox"
+                                name={key}
                                 checked={field.value as boolean}
-                                onCheckedChange={field.onChange}
+                                onChange={(e) => field.onChange(e.target.checked)}
+                                className="h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                               />
                             </FormControl>
                             <Label htmlFor={key} className="text-sm cursor-pointer">
