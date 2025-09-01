@@ -62,8 +62,8 @@ const Index = () => {
     setPredictedPrice(null);
     
     try {
-      // Call the FastAPI predict endpoint
-      const response = await fetch("http://localhost:8000/predict", {
+      // Call the FastAPI predict endpoint (Render)
+      const response = await fetch("https://fastapi-docker-starter.onrender.com/api/v1/predict", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const Index = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to get price prediction. Make sure the FastAPI server is running on port 8000.",
+        description: "Failed to get price prediction. Please verify the backend URL is reachable.",
         variant: "destructive",
       });
     } finally {
