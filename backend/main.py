@@ -14,6 +14,7 @@ ALLOWED_ORIGINS = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.sandbox\.lovable\.dev",  # any sandbox subdomain
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],  # be explicit
     allow_headers=["Content-Type", "Authorization"],  # add any custom headers you use
