@@ -63,7 +63,7 @@ const Index = () => {
     
     try {
       // Call the FastAPI predict endpoint (Render)
-      const response = await fetch("https://fastapi-docker-starter.onrender.com/api/v1/predict", {
+      const response = await fetch("https://fastapi-docker-starter.onrender.com/predict", {
         method: "GET",
       });
 
